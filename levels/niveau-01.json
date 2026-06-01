@@ -1,0 +1,1 @@
+{"id":1,"titre":"Premiers pas","grille":{"largeur":3,"hauteur":1},"dino":{"x":0,"y":0,"direction":"droite"},"oeufs":[],"nid":{"x":2,"y":0},"murs":[],"blocs_autorises":["avance","tourne_droite","tourne_gauche"],"objectif":"Avance jusqu'au nid","etoiles":{"max_blocs_3":2,"max_blocs_2":3}}

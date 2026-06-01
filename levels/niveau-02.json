@@ -1,0 +1,1 @@
+{"id":2,"titre":"Le virage","grille":{"largeur":3,"hauteur":3},"dino":{"x":0,"y":0,"direction":"droite"},"oeufs":[],"nid":{"x":2,"y":2},"murs":[],"blocs_autorises":["avance","tourne_droite","tourne_gauche"],"objectif":"Tourne pour atteindre le nid","etoiles":{"max_blocs_3":5,"max_blocs_2":7}}

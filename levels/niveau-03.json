@@ -1,0 +1,1 @@
+{"id":3,"titre":"Premier œuf","grille":{"largeur":4,"hauteur":1},"dino":{"x":0,"y":0,"direction":"droite"},"oeufs":[{"x":1,"y":0},{"x":2,"y":0}],"nid":{"x":3,"y":0},"murs":[],"blocs_autorises":["avance","gobe"],"objectif":"Gobe les œufs puis va au nid","etoiles":{"max_blocs_3":5,"max_blocs_2":7}}

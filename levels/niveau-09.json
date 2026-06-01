@@ -1,0 +1,1 @@
+{"id":9,"titre":"Le mur surprise","grille":{"largeur":5,"hauteur":2},"dino":{"x":0,"y":0,"direction":"droite"},"oeufs":[{"x":2,"y":0}],"nid":{"x":4,"y":1},"murs":[{"x":3,"y":0}],"blocs_autorises":["avance","gobe","tourne_droite","tourne_gauche","repete","si"],"objectif":"Contourne le mur","etoiles":{"max_blocs_3":7,"max_blocs_2":11}}

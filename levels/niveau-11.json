@@ -1,0 +1,1 @@
+{"id":11,"titre":"La spirale","grille":{"largeur":4,"hauteur":4},"dino":{"x":0,"y":0,"direction":"droite"},"oeufs":[{"x":3,"y":0},{"x":3,"y":3},{"x":0,"y":3}],"nid":{"x":1,"y":1},"murs":[],"blocs_autorises":["avance","gobe","tourne_droite","repete","si"],"objectif":"Rassemble tout en spirale","etoiles":{"max_blocs_3":8,"max_blocs_2":14}}

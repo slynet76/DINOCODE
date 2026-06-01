@@ -1,0 +1,1 @@
+{"id":4,"titre":"La ligne droite","grille":{"largeur":5,"hauteur":1},"dino":{"x":0,"y":0,"direction":"droite"},"oeufs":[{"x":1,"y":0},{"x":2,"y":0},{"x":3,"y":0}],"nid":{"x":4,"y":0},"murs":[],"blocs_autorises":["avance","gobe","repete"],"objectif":"Utilise une boucle pour gober tous les œufs","etoiles":{"max_blocs_3":3,"max_blocs_2":6}}

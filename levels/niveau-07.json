@@ -1,0 +1,1 @@
+{"id":7,"titre":"Le long couloir","grille":{"largeur":6,"hauteur":1},"dino":{"x":0,"y":0,"direction":"droite"},"oeufs":[{"x":1,"y":0},{"x":2,"y":0},{"x":3,"y":0},{"x":4,"y":0}],"nid":{"x":5,"y":0},"murs":[],"blocs_autorises":["avance","gobe","repete"],"objectif":"Une boucle bien comptée","etoiles":{"max_blocs_3":3,"max_blocs_2":8}}

@@ -1,0 +1,1 @@
+{"id":5,"titre":"La grotte","grille":{"largeur":4,"hauteur":3},"dino":{"x":0,"y":0,"direction":"droite"},"oeufs":[{"x":2,"y":0},{"x":3,"y":1}],"nid":{"x":3,"y":2},"murs":[{"x":1,"y":1}],"blocs_autorises":["avance","gobe","tourne_droite","tourne_gauche","repete"],"objectif":"Gobe les 2 œufs puis rejoins le nid","etoiles":{"max_blocs_3":6,"max_blocs_2":9}}
