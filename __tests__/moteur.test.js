@@ -107,3 +107,44 @@ test('garde-fou : limite de pas dépassée → échec boucle_infinie', () => {
   expect(r.succes).toBe(false);
   expect(r.raison).toBe('trop_de_pas');
 });
+
+test('tourne_gauche : depuis droite → haut, avance remonte d\'une ligne', () => {
+  // droite is index 0 in ORDRE_HORAIRE; (0 + 3) % 4 = 3 → 'haut'; dy=-1 so (0,1)→(0,0)
+  const niveau = {
+    grille: { largeur: 2, hauteur: 2 },
+    dino: { x: 0, y: 1, direction: 'droite' },
+    oeufs: [], nid: { x: 0, y: 0 }, murs: [],
+  };
+  const programme = [{ type: 'tourne_gauche' }, { type: 'avance' }];
+  const r = executerProgramme(niveau, programme);
+  expect(r.succes).toBe(true);
+  expect(r.positionFinale).toEqual({ x: 0, y: 0 });
+});
+
+test('si condition fausse → corps ignoré, dino avance quand même', () => {
+  // No egg at (0,0) so oeuf_ici is false; si body (gobe) is skipped; avance → (1,0) = nid
+  const niveau = {
+    grille: { largeur: 2, hauteur: 1 },
+    dino: { x: 0, y: 0, direction: 'droite' },
+    oeufs: [], nid: { x: 1, y: 0 }, murs: [],
+  };
+  const programme = [
+    { type: 'si', condition: 'oeuf_ici', corps: [{ type: 'gobe' }] },
+    { type: 'avance' },
+  ];
+  const r = executerProgramme(niveau, programme);
+  expect(r.succes).toBe(true);
+  expect(r.trace.some((a) => a.action === 'gobe')).toBe(false);
+});
+
+test('pas_au_nid : programme se termine sans atteindre le nid', () => {
+  // Grid 3x1, nid at (2,0); one avance reaches (1,0), one short of nid
+  const niveau = {
+    grille: { largeur: 3, hauteur: 1 },
+    dino: { x: 0, y: 0, direction: 'droite' },
+    oeufs: [], nid: { x: 2, y: 0 }, murs: [],
+  };
+  const r = executerProgramme(niveau, [{ type: 'avance' }]);
+  expect(r.succes).toBe(false);
+  expect(r.raison).toBe('pas_au_nid');
+});
