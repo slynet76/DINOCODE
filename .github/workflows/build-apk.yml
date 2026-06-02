@@ -1,0 +1,21 @@
+name: Build APK
+on:
+  push:
+    tags: ['v*']
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - run: npm ci
+      - run: npm run prebuild:atelier
+      - run: eas build --platform android --profile preview --non-interactive --wait --output ./app.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: ./app.apk

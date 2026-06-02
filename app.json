@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "kids-code-app",
-    "slug": "kids-code-app",
+    "name": "Yoshi Code",
+    "slug": "yoshi-code",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,6 +10,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "fr.slynet.yoshicode",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
