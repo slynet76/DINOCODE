@@ -21,6 +21,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "71b266a0-bf5e-4d4e-b6e5-ee36a8fa658f"
+      }
+    },
+    "owner": "slynet762"
   }
 }
