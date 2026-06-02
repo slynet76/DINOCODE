@@ -63,8 +63,7 @@ function blocVersAst(bloc) {
 
 function espaceVersAst(workspace) {
   const tops = workspace.getTopBlocks(true).filter((b) => !b.previousConnection || !b.previousConnection.targetBlock());
-  const tete = tops[0];
-  return tete ? blocVersAst(tete) : [];
+  return tops.flatMap((tete) => blocVersAst(tete));
 }
 
 window.blocs = { espaceVersAst };

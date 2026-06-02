@@ -15,6 +15,8 @@ function contientBoucleOuCondition(programme) {
   return false;
 }
 
+// 3 étoiles exigent une boucle ou une condition (repete/si).
+// Les niveaux 1–3 ne proposent pas ces blocs, donc ils plafonnent à 2 étoiles par conception.
 function calculerEtoiles(niveau, programme) {
   const n = compterBlocs(programme);
   const seuils = niveau.etoiles;

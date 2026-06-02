@@ -1,5 +1,5 @@
 // ⚠️ Garder synchronisé avec l'autre copie (core/moteur.js <-> webview/moteur-web.js)
-// core/moteur.js
+// webview/moteur-web.js
 const VECTEURS = {
   droite: { dx: 1, dy: 0 }, bas: { dx: 0, dy: 1 },
   gauche: { dx: -1, dy: 0 }, haut: { dx: 0, dy: -1 },

@@ -17,7 +17,7 @@
  */
 
 import React, { useRef, useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system';
@@ -36,6 +36,7 @@ export default function JeuScreen({ route, navigation }) {
   const niveau = niveaux.find((n) => n.id === niveauId);
   const webRef = useRef(null);
   const [html, setHtml] = useState(null);
+  const [erreur, setErreur] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -48,6 +49,7 @@ export default function JeuScreen({ route, navigation }) {
         if (!cancelled) setHtml(contenu);
       } catch (e) {
         console.error('[JeuScreen] failed to load bundled HTML:', e);
+        if (!cancelled) setErreur(true);
       }
     })();
     return () => { cancelled = true; };
@@ -71,6 +73,15 @@ export default function JeuScreen({ route, navigation }) {
     } catch (e) {
       console.error('[JeuScreen] onMessage parse error:', e);
     }
+  }
+
+  // Show a friendly error if the bundled asset couldn't be loaded
+  if (erreur) {
+    return (
+      <View style={styles.erreur}>
+        <Text>😟 Impossible de charger l'atelier. Relance l'application.</Text>
+      </View>
+    );
   }
 
   // Show an empty screen while the asset is loading
@@ -98,4 +109,5 @@ export default function JeuScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   plein: { flex: 1 },
+  erreur: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });
