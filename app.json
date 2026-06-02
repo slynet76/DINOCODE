@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Yoshi Code",
-    "slug": "yoshi-code",
+    "name": "DinoCode",
+    "slug": "dinocode",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
