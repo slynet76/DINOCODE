@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <style>
+    body { margin: 0; font-family: sans-serif; background: #dcfce7; }
+    #grille { display: grid; gap: 3px; padding: 8px; }
+    .case { aspect-ratio: 1; background: #86efac; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    #blockly { height: 40vh; }
+    #code { background: #0f172a; color: #4ade80; font-family: monospace;
+            font-size: 12px; padding: 8px; white-space: pre; min-height: 60px; }
+    #code .actif { background: #334155; display: block; }
+    #go { width: 100%; padding: 14px; font-size: 18px; font-weight: bold;
+          color: #fff; background: #16a34a; border: none; }
+    #message { padding: 8px; text-align: center; font-weight: bold; min-height: 22px; }
+  </style>
+</head>
+<body>
+  <div id="grille"></div>
+  <div id="message"></div>
+  <div id="blockly"></div>
+  <pre id="code"></pre>
+  <button id="go">▶ GO DINO !</button>
+
+  <script src="build/blockly_compressed.js"></script>
+  <script src="build/blocks_compressed.js"></script>
+  <script src="build/python_compressed.js"></script>
+  <script src="build/fr.js"></script>
+  <script src="moteur-web.js"></script>
+  <script src="rendu.js"></script>
+  <script src="pont.js"></script>
+  <script src="blocs.js"></script>
+  <script src="atelier.js"></script>
+</body>
+</html>

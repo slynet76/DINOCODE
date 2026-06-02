@@ -1,0 +1,41 @@
+/**
+ * prebuild-atelier.js
+ *
+ * 1. Mirrors webview/ → assets/atelier/  (for reference / Option A fallback)
+ * 2. Generates assets/atelier/index.bundled.html  (Option B: single inlined HTML)
+ *    by reading index.html and replacing every <script src="..."> with an
+ *    inline <script> block containing the file's content.
+ *    This eliminates all relative-path / file-access uncertainties on Android.
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+const ROOT = path.resolve(__dirname, '..');
+const SRC  = path.join(ROOT, 'webview');
+const DEST = path.join(ROOT, 'assets', 'atelier');
+
+// --- Step 1: mirror webview/ → assets/atelier/ ---
+fs.cpSync(SRC, DEST, { recursive: true });
+console.log('[prebuild-atelier] mirrored webview/ → assets/atelier/');
+
+// --- Step 2: generate inlined bundle ---
+const htmlPath  = path.join(SRC, 'index.html');
+let html = fs.readFileSync(htmlPath, 'utf8');
+
+// Replace every <script src="..."> with its inlined content
+html = html.replace(/<script src="([^"]+)"><\/script>/g, (match, relPath) => {
+  const filePath = path.join(SRC, relPath);
+  if (!fs.existsSync(filePath)) {
+    console.error(`[prebuild-atelier] MISSING: ${filePath}`);
+    return match; // leave as-is so we notice the error
+  }
+  const content = fs.readFileSync(filePath, 'utf8');
+  console.log(`[prebuild-atelier] inlining ${relPath} (${content.length} bytes)`);
+  return `<script>\n${content}\n</script>`;
+});
+
+const outPath = path.join(DEST, 'index.bundled.html');
+fs.writeFileSync(outPath, html, 'utf8');
+const sizeKB = Math.round(fs.statSync(outPath).size / 1024);
+console.log(`[prebuild-atelier] wrote assets/atelier/index.bundled.html (${sizeKB} KB)`);

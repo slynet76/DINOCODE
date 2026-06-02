@@ -1,0 +1,98 @@
+// ⚠️ Garder synchronisé avec l'autre copie (core/moteur.js <-> webview/moteur-web.js)
+// core/moteur.js
+const VECTEURS = {
+  droite: { dx: 1, dy: 0 }, bas: { dx: 0, dy: 1 },
+  gauche: { dx: -1, dy: 0 }, haut: { dx: 0, dy: -1 },
+};
+const ORDRE_HORAIRE = ['droite', 'bas', 'gauche', 'haut'];
+const LIMITE_PAS = 200;
+
+function estMur(niveau, x, y) {
+  return niveau.murs.some((m) => m.x === x && m.y === y);
+}
+function horsGrille(niveau, x, y) {
+  return x < 0 || y < 0 || x >= niveau.grille.largeur || y >= niveau.grille.hauteur;
+}
+
+function executerProgramme(niveau, programme) {
+  const etat = {
+    x: niveau.dino.x, y: niveau.dino.y,
+    direction: niveau.dino.direction,
+  };
+  const restants = niveau.oeufs.map((o) => ({ ...o, gobe: false }));
+  const trace = [];
+  let echec = null;
+  let pas = 0;
+
+  function compter() {
+    pas += 1;
+    if (pas > LIMITE_PAS) echec = 'trop_de_pas';
+  }
+  function tourne(sens) {
+    compter(); if (echec) return;
+    const i = ORDRE_HORAIRE.indexOf(etat.direction);
+    etat.direction = ORDRE_HORAIRE[(i + (sens === 'droite' ? 1 : 3)) % 4];
+    trace.push({ action: 'tourne', direction: etat.direction });
+  }
+  function avance() {
+    compter(); if (echec) return;
+    const v = VECTEURS[etat.direction];
+    const nx = etat.x + v.dx, ny = etat.y + v.dy;
+    if (horsGrille(niveau, nx, ny)) { echec = 'hors_grille'; return; }
+    if (estMur(niveau, nx, ny)) { echec = 'mur'; return; }
+    etat.x = nx; etat.y = ny;
+    trace.push({ action: 'avance', x: etat.x, y: etat.y });
+  }
+  function gobe() {
+    compter(); if (echec) return;
+    const oeuf = restants.find((o) => !o.gobe && o.x === etat.x && o.y === etat.y);
+    if (oeuf) { oeuf.gobe = true; trace.push({ action: 'gobe', x: etat.x, y: etat.y }); }
+  }
+  function condition(nom) {
+    if (nom === 'oeuf_ici') {
+      return restants.some((o) => !o.gobe && o.x === etat.x && o.y === etat.y);
+    }
+    if (nom === 'mur_devant') {
+      const v = VECTEURS[etat.direction];
+      const nx = etat.x + v.dx, ny = etat.y + v.dy;
+      return horsGrille(niveau, nx, ny) || estMur(niveau, nx, ny);
+    }
+    return false;
+  }
+  function executerListe(liste) {
+    for (const instr of liste) {
+      if (echec) return;
+      switch (instr.type) {
+        case 'avance': avance(); break;
+        case 'tourne_droite': tourne('droite'); break;
+        case 'tourne_gauche': tourne('gauche'); break;
+        case 'gobe': gobe(); break;
+        case 'repete':
+          for (let k = 0; k < instr.n && !echec; k++) executerListe(instr.corps);
+          break;
+        case 'si':
+          if (condition(instr.condition)) executerListe(instr.corps);
+          break;
+      }
+    }
+  }
+
+  executerListe(programme);
+
+  const oeufsGobes = restants.filter((o) => o.gobe).length;
+  if (echec) {
+    return { succes: false, raison: echec, oeufsGobes,
+      positionFinale: { x: etat.x, y: etat.y }, trace };
+  }
+  const tousGobes = oeufsGobes === restants.length;
+  const surNid = etat.x === niveau.nid.x && etat.y === niveau.nid.y;
+  let raison = null;
+  if (!tousGobes) raison = 'oeufs_restants';
+  else if (!surNid) raison = 'pas_au_nid';
+  return {
+    succes: tousGobes && surNid, raison, oeufsGobes,
+    positionFinale: { x: etat.x, y: etat.y }, trace,
+  };
+}
+
+window.executerProgramme = executerProgramme;
