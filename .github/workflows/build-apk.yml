@@ -18,7 +18,11 @@ jobs:
       - name: Build APK via EAS (remote)
         run: eas build --platform android --profile preview --non-interactive --wait
       - name: Download APK from EAS
-        run: eas build:download --platform android --output ./app.apk --latest
+        run: |
+          APK_URL=$(eas build:list --platform android --status finished --limit 1 --non-interactive --json 2>/dev/null | \
+            python3 -c "import sys,json; builds=json.load(sys.stdin); print(builds[0]['artifacts']['buildUrl'])")
+          echo "Downloading APK from: $APK_URL"
+          curl -fL -o ./app.apk "$APK_URL"
       - uses: softprops/action-gh-release@v2
         with:
           files: ./app.apk
