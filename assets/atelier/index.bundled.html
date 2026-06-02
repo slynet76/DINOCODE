@@ -4,247 +4,265 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <style>
-    /* ── Reset & base ─────────────────────────────────────────── */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(180deg, #87ceeb 0%, #b0e0ff 35%, #7bc43a 35%, #5a9e28 100%);
-      min-height: 100vh;
+    /* ── Design system Material 3 ─────────────────────────────── */
+    :root {
+      --primary:    #1976d2;
+      --primary-dk: #1256a0;
+      --surface:    #ffffff;
+      --bg:         #f0f4f8;
+      --outline:    #cdd5de;
+      --text:       #1a2332;
+      --text-sec:   #4a5568;
+      --success:    #2e7d32;
+      --code-bg:    #1e2a3a;
+      --code-fg:    #7dd3fc;
+      --radius:     12px;
+      --shadow:     0 2px 8px rgba(0,0,0,0.10);
+      --shadow-md:  0 4px 16px rgba(0,0,0,0.14);
     }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Segoe UI', Arial, sans-serif; }
 
-    /* ── Header Yoshi ──────────────────────────────────────────── */
-    #header {
+    /* ── Layout vertical scrollable ──────────────────────────── */
+    #app { display: flex; flex-direction: column; min-height: 100%; padding: 10px; gap: 10px; }
+
+    /* ── Carte objectif ──────────────────────────────────────── */
+    #carte-objectif {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border-left: 5px solid var(--primary);
+      padding: 10px 14px;
+    }
+    #carte-objectif .label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--primary);
+      margin-bottom: 3px;
+    }
+    #message {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+    }
+    #etoiles-info { font-size: 12px; color: var(--text-sec); margin-top: 3px; }
+
+    /* ── Grille de jeu ───────────────────────────────────────── */
+    #carte-grille {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      padding: 10px;
+    }
+    #grille-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(135deg, #e83020 0%, #c01a0e 100%);
-      padding: 8px 12px;
-      border-bottom: 3px solid #8b1208;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      margin-bottom: 8px;
     }
-    #header-titre {
-      font-size: 20px;
-      font-weight: 900;
-      color: #ffd700;
-      text-shadow: 2px 2px 0 #8b1208, -1px -1px 0 #8b1208;
-      letter-spacing: 1px;
-    }
-    #header-etoiles {
-      font-size: 18px;
-      color: #ffd700;
-    }
-
-    /* ── Message objectif ──────────────────────────────────────── */
-    #message {
-      background: rgba(255,255,255,0.92);
-      border: 2px solid #5dcf20;
-      border-radius: 10px;
-      margin: 6px 8px 4px;
-      padding: 6px 10px;
-      text-align: center;
-      font-weight: 700;
-      font-size: 13px;
-      color: #2d5a0e;
-      min-height: 28px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-
-    /* ── Grille de jeu ─────────────────────────────────────────── */
-    #grille-wrapper {
-      background: linear-gradient(180deg, #87ceeb 0%, #a8d8ea 60%, #7bc43a 60%);
-      border: 3px solid #3a7d18;
-      border-radius: 12px;
-      margin: 4px 8px;
-      padding: 6px;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.2), 0 3px 10px rgba(0,0,0,0.2);
-      overflow: hidden;
-    }
+    #grille-header .label { font-size: 11px; font-weight: 700; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.8px; }
     #grille {
       display: grid;
       gap: 3px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1.5px solid var(--outline);
     }
     .case {
       aspect-ratio: 1;
-      background: linear-gradient(180deg, #87d83e 0%, #5cb82a 60%, #3d8a18 100%);
-      border-radius: 6px;
-      border: 1.5px solid #3a7d18;
+      background: #eef4fb;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
       position: relative;
-      box-shadow: inset 0 1px 3px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.2);
+      transition: background 0.15s;
     }
-    .case svg { width: 90%; height: 90%; }
-    .case-mur {
-      background: linear-gradient(180deg, #aaa 0%, #777 100%);
-      border-color: #555;
-    }
-    .case-nid {
-      background: linear-gradient(180deg, #ffe87a 0%, #f5d020 50%, #5cb82a 50%, #3d8a18 100%);
-      border-color: #c8a800;
-      box-shadow: 0 0 8px rgba(255,215,0,0.6), inset 0 1px 3px rgba(255,255,255,0.4);
-    }
-    .case-oeuf {
-      background: linear-gradient(180deg, #eef8d0 0%, #d4eeaa 50%, #5cb82a 50%, #3d8a18 100%);
-    }
+    .case svg { width: 88%; height: 88%; }
+    .case:nth-child(odd)  { background: #f4f8fc; }
+    .case:nth-child(even) { background: #eef4fb; }
+    .case-mur  { background: #dde3ea !important; }
+    .case-nid  { background: #fff8e1 !important; box-shadow: inset 0 0 6px rgba(255,193,7,0.4); }
+    .case-oeuf { background: #f0fdf4 !important; }
     .case-yoshi {
-      background: linear-gradient(180deg, #a0e060 0%, #70c030 50%, #3d8a18 50%, #2d6a10 100%);
-      box-shadow: 0 0 10px rgba(93,207,32,0.5), inset 0 1px 3px rgba(255,255,255,0.4);
-      animation: yoshi-bounce 0.3s ease;
+      background: #e3f2fd !important;
+      box-shadow: inset 0 0 8px rgba(25,118,210,0.2);
+      animation: pop 0.18s ease;
     }
-    @keyframes yoshi-bounce {
-      0%   { transform: scale(1); }
-      40%  { transform: scale(1.12); }
-      100% { transform: scale(1); }
-    }
+    @keyframes pop { 0%{transform:scale(0.88)} 60%{transform:scale(1.06)} 100%{transform:scale(1)} }
 
-    /* ── Zone Blockly ──────────────────────────────────────────── */
-    #blockly-wrapper {
-      background: white;
-      border: 3px solid #5dcf20;
-      border-radius: 10px;
-      margin: 4px 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    #blockly-label {
-      background: linear-gradient(90deg, #5dcf20, #3aaa1a);
-      color: white;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 10px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-    #blockly { height: 38vh; }
-
-    /* ── Panneau Python ────────────────────────────────────────── */
-    #code-wrapper {
-      background: #0d1117;
-      border: 2px solid #5dcf20;
-      border-radius: 8px;
-      margin: 4px 8px;
-      overflow: hidden;
-    }
-    #code-label {
-      background: #161b22;
-      color: #5dcf20;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 10px;
-      letter-spacing: 1px;
+    /* ── Guide étapes ────────────────────────────────────────── */
+    #etapes {
       display: flex;
-      align-items: center;
       gap: 6px;
     }
-    #code-label::before { content: '🐍'; }
-    #code {
-      background: #0d1117;
-      color: #4ade80;
-      font-family: 'Courier New', monospace;
-      font-size: 11px;
-      padding: 6px 10px;
-      white-space: pre;
-      min-height: 44px;
-      max-height: 80px;
-      overflow-y: auto;
-      line-height: 1.5;
-    }
-    #code .actif {
-      background: #1e3a2e;
-      color: #86efac;
-      display: block;
-      border-left: 3px solid #5dcf20;
-      padding-left: 4px;
-      margin-left: -4px;
-    }
-
-    /* ── Boutons d'action ──────────────────────────────────────── */
-    #boutons-action {
-      padding: 6px 8px 4px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    #go {
-      width: 100%;
-      padding: 13px;
-      font-size: 17px;
-      font-weight: 900;
-      color: white;
-      background: linear-gradient(135deg, #e83020 0%, #c01a0e 100%);
-      border: 3px solid #8b1208;
-      border-radius: 12px;
-      letter-spacing: 1px;
-      text-shadow: 1px 1px 0 #8b1208;
-      box-shadow: 0 4px 0 #8b1208, 0 6px 12px rgba(0,0,0,0.3);
-      cursor: pointer;
-      transition: transform 0.1s, box-shadow 0.1s;
-    }
-    #go:active { transform: translateY(3px); box-shadow: 0 1px 0 #8b1208; }
-    #boutons-debug { display: flex; gap: 6px; }
-    #lent, #pas {
+    .etape {
       flex: 1;
-      padding: 9px 6px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1.5px solid var(--outline);
+      padding: 7px 6px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-sec);
+    }
+    .etape .num {
+      display: block;
+      width: 22px; height: 22px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 22px;
+      margin: 0 auto 4px;
+    }
+    .etape strong { display: block; font-size: 10px; color: var(--text); }
+
+    /* ── Zone blocs ──────────────────────────────────────────── */
+    #carte-blocs {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 2px solid var(--primary);
+    }
+    #blocs-header {
+      background: var(--primary);
+      color: white;
+      padding: 8px 14px;
       font-size: 13px;
       font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #blocs-header span { font-size: 10px; font-weight: 400; opacity: 0.85; }
+    #blockly { height: 35vh; }
+
+    /* ── Panneau code ────────────────────────────────────────── */
+    #carte-code {
+      background: var(--code-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    #code-header {
+      background: #162032;
+      padding: 6px 12px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--code-fg);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 6px;
+    }
+    #code {
+      background: var(--code-bg);
+      color: var(--code-fg);
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      padding: 8px 14px;
+      white-space: pre;
+      min-height: 46px;
+      max-height: 90px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+    #code .actif {
+      background: #1e3a5f;
+      color: #bae6fd;
+      display: block;
+      border-left: 3px solid var(--primary);
+      padding-left: 6px;
+      margin-left: -6px;
+    }
+
+    /* ── Boutons ─────────────────────────────────────────────── */
+    #zone-boutons { display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; }
+    #go {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 700;
       color: white;
-      border: 2px solid transparent;
-      border-radius: 10px;
+      background: var(--primary);
+      border: none;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(25,118,210,0.35);
       cursor: pointer;
-      transition: transform 0.1s;
-      box-shadow: 0 3px 0 rgba(0,0,0,0.3);
+      letter-spacing: 0.5px;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.1s;
     }
-    #lent {
-      background: linear-gradient(135deg, #0ea5e9, #0284c7);
-      border-color: #0369a1;
-      box-shadow: 0 3px 0 #0369a1;
+    #go:active { background: var(--primary-dk); transform: translateY(2px); box-shadow: 0 2px 6px rgba(25,118,210,0.25); }
+    #boutons-sec { display: flex; gap: 8px; }
+    #lent, #pas {
+      flex: 1; padding: 10px 8px;
+      font-size: 12px; font-weight: 600;
+      border: 1.5px solid var(--outline);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.12s;
     }
-    #pas {
-      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-      border-color: #5b21b6;
-      box-shadow: 0 3px 0 #5b21b6;
-    }
-    #lent:active, #pas:active { transform: translateY(2px); box-shadow: none; }
+    #lent:active, #pas:active { background: #e8f0fe; }
   </style>
 </head>
 <body>
+<div id="app">
 
-  <!-- Header -->
-  <div id="header">
-    <span id="header-titre">🦖 DINO CODE</span>
-    <span id="header-etoiles">⭐⭐⭐</span>
+  <!-- ① Objectif du niveau -->
+  <div id="carte-objectif">
+    <div class="label">🎯 Objectif du niveau</div>
+    <div id="message">Chargement…</div>
+    <div id="etoiles-info"></div>
   </div>
 
-  <!-- Objectif -->
-  <div id="message">Charge un niveau...</div>
-
-  <!-- Grille de jeu -->
-  <div id="grille-wrapper">
+  <!-- ② Grille de jeu -->
+  <div id="carte-grille">
+    <div id="grille-header">
+      <span class="label">🗺 Grille de jeu</span>
+      <span style="font-size:11px;color:#888">🦖 = Dino &nbsp; 🥚 = Œuf &nbsp; ⭐ = Nid</span>
+    </div>
     <div id="grille"></div>
   </div>
 
-  <!-- Zone blocs Blockly -->
-  <div id="blockly-wrapper">
-    <div id="blockly-label">Programme de Yoshi</div>
+  <!-- ③ Comment jouer -->
+  <div id="etapes">
+    <div class="etape"><span class="num">1</span><strong>Lis l'objectif</strong>ci-dessus</div>
+    <div class="etape"><span class="num">2</span><strong>Pose des blocs</strong>ci-dessous</div>
+    <div class="etape"><span class="num">3</span><strong>Lance</strong>le programme</div>
+  </div>
+
+  <!-- ④ Zone blocs -->
+  <div id="carte-blocs">
+    <div id="blocs-header">
+      🧩 Assemble ton programme ici
+      <span>← fais glisser les blocs depuis la barre de gauche</span>
+    </div>
     <div id="blockly"></div>
   </div>
 
-  <!-- Code Python -->
-  <div id="code-wrapper">
-    <div id="code-label">Code Python généré</div>
-    <pre id="code"># pose des blocs ici</pre>
+  <!-- ⑤ Code Python généré -->
+  <div id="carte-code">
+    <div id="code-header">🐍 Code Python correspondant</div>
+    <pre id="code"># Pose des blocs ci-dessus, le code apparaît ici…</pre>
   </div>
 
-  <!-- Boutons -->
-  <div id="boutons-action">
-    <button id="go">▶ GO YOSHI !</button>
-    <div id="boutons-debug">
-      <button id="lent">🐢 Lent</button>
-      <button id="pas">▶ Pas suivant</button>
+  <!-- ⑥ Boutons d'action -->
+  <div id="zone-boutons">
+    <button id="go">▶  Lancer le programme</button>
+    <div id="boutons-sec">
+      <button id="lent">🐢  Mode lent</button>
+      <button id="pas">▶  Pas suivant</button>
     </div>
   </div>
+
+</div>
 
   <script>
 // Do not edit this file; automatically generated.
@@ -3053,121 +3071,115 @@ window.executerProgramme = executerProgramme;
 
 </script>
   <script>
-// sprites.js — Sprites SVG Yoshi pour la grille de jeu
-// Tous les sprites sont des SVG inline (data URI) intégrés directement dans le DOM.
+// sprites.js — Sprites SVG Yoshi style épuré (Material-friendly)
+// Designs propres, lisibles sur fond clair, sans surcharge décorative.
 
 const ROTATION = { droite: 0, bas: 90, gauche: 180, haut: 270 };
 
-// ─── Yoshi vert ──────────────────────────────────────────────────────────────
+// ─── Yoshi vert (design clean) ───────────────────────────────────────────────
 function svgYoshi(direction) {
   const deg = ROTATION[direction] || 0;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="width:100%;height:100%;transform:rotate(${deg}deg);transition:transform 0.15s">
-    <!-- Selle verte dos -->
-    <ellipse cx="18" cy="14" rx="7" ry="5" fill="#3aaa1a"/>
-    <ellipse cx="26" cy="11" rx="6" ry="4" fill="#3aaa1a"/>
-    <!-- Piques dos -->
-    <polygon points="14,10 11,4 17,9" fill="#2d8c14"/>
-    <polygon points="22,8 19,2 24,7" fill="#2d8c14"/>
-    <polygon points="29,9 27,3 32,8" fill="#2d8c14"/>
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+    style="width:100%;height:100%;transform:rotate(${deg}deg);transition:transform 0.15s ease;display:block">
+    <!-- Ombre légère -->
+    <ellipse cx="24" cy="46" rx="13" ry="2.5" fill="rgba(0,0,0,0.12)"/>
     <!-- Corps -->
-    <ellipse cx="20" cy="30" rx="14" ry="12" fill="#5dcf20"/>
+    <ellipse cx="20" cy="31" rx="13" ry="11" fill="#4caf50"/>
     <!-- Ventre -->
-    <ellipse cx="20" cy="32" rx="9" ry="8" fill="#d4f09a"/>
+    <ellipse cx="20" cy="33" rx="8.5" ry="7.5" fill="#c8e6c9"/>
+    <!-- Piques dos -->
+    <polygon points="10,22 7,15 13,21" fill="#388e3c"/>
+    <polygon points="17,19 14,12 20,18" fill="#388e3c"/>
+    <polygon points="24,18 22,11 27,17" fill="#388e3c"/>
     <!-- Tête -->
-    <ellipse cx="34" cy="20" rx="12" ry="11" fill="#5dcf20"/>
-    <!-- Oeil blanc -->
-    <ellipse cx="37" cy="17" rx="5" ry="5.5" fill="white"/>
-    <!-- Pupille -->
-    <ellipse cx="38" cy="17" rx="3" ry="3.5" fill="#1a1a2e"/>
-    <!-- Reflet oeil -->
-    <ellipse cx="36.5" cy="15.5" rx="1.5" ry="1.5" fill="white"/>
-    <!-- Nez orange -->
-    <ellipse cx="43" cy="22" rx="5" ry="4" fill="#ff8c00"/>
-    <ellipse cx="44" cy="21" rx="1.2" ry="1" fill="#cc5500"/>
-    <!-- Bouche -->
-    <path d="M38 26 Q41 29 44 26" stroke="#cc5500" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-    <!-- Joue rose -->
-    <ellipse cx="38" cy="22" rx="3.5" ry="2.5" fill="#ffaaaa" opacity="0.55"/>
+    <ellipse cx="32" cy="22" rx="11" ry="10" fill="#4caf50"/>
+    <!-- Oeil -->
+    <ellipse cx="35" cy="19" rx="4.5" ry="5" fill="white"/>
+    <ellipse cx="36" cy="19" rx="2.5" ry="3" fill="#1a237e"/>
+    <ellipse cx="35" cy="17.5" rx="1.2" ry="1.2" fill="white"/>
+    <!-- Nez -->
+    <ellipse cx="41" cy="24" rx="4.5" ry="3.5" fill="#ff8f00"/>
+    <ellipse cx="42.5" cy="23" rx="1" ry="0.8" fill="#e65100"/>
+    <!-- Joue -->
+    <ellipse cx="36" cy="23" rx="3" ry="2" fill="#ef9a9a" opacity="0.5"/>
     <!-- Bras -->
-    <ellipse cx="8" cy="30" rx="5" ry="7" fill="#5dcf20" transform="rotate(-25 8 30)"/>
-    <ellipse cx="9" cy="37" rx="3.5" ry="2.5" fill="#4aad18"/>
-    <!-- Pattes / chaussures rouges -->
-    <ellipse cx="14" cy="43" rx="7" ry="4.5" fill="#e83020"/>
-    <ellipse cx="28" cy="43" rx="7" ry="4.5" fill="#e83020"/>
-    <!-- Semelles -->
-    <ellipse cx="14" cy="44.5" rx="6" ry="2.5" fill="#b01a10"/>
-    <ellipse cx="28" cy="44.5" rx="6" ry="2.5" fill="#b01a10"/>
+    <ellipse cx="9" cy="31" rx="4.5" ry="6.5" fill="#4caf50" transform="rotate(-20 9 31)"/>
+    <!-- Chaussures rouges -->
+    <ellipse cx="14" cy="43" rx="6.5" ry="4" fill="#e53935"/>
+    <ellipse cx="27" cy="43" rx="6.5" ry="4" fill="#e53935"/>
+    <ellipse cx="14" cy="44.5" rx="5.5" ry="2.2" fill="#b71c1c"/>
+    <ellipse cx="27" cy="44.5" rx="5.5" ry="2.2" fill="#b71c1c"/>
     <!-- Queue -->
-    <ellipse cx="6" cy="24" rx="5" ry="3.5" fill="#5dcf20" transform="rotate(-30 6 24)"/>
+    <ellipse cx="7" cy="26" rx="4.5" ry="3" fill="#4caf50" transform="rotate(-35 7 26)"/>
   </svg>`;
 }
 
-// ─── Œuf Yoshi ───────────────────────────────────────────────────────────────
-const SVG_OEUF = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="width:100%;height:100%">
-  <!-- Ombre -->
-  <ellipse cx="24" cy="45" rx="12" ry="3" fill="rgba(0,0,0,0.15)"/>
-  <!-- Corps de l'oeuf -->
-  <ellipse cx="24" cy="25" rx="16" ry="19" fill="#f5f0d8"/>
-  <!-- Taches vertes étoilées -->
-  <path d="M16 18 L17.5 22 L14 24.5 L18 24.5 L19 28.5 L21 24.5 L25 25.5 L22 22.5 L23.5 18.5 L20.5 21.5 Z" fill="#5dcf20" opacity="0.85"/>
-  <path d="M28 12 L29 15 L26.5 16.5 L29.5 16.5 L30 19.5 L31.5 16.5 L34 17 L32 15 L33 12 L31 14 Z" fill="#5dcf20" opacity="0.85"/>
-  <path d="M14 30 L15 32.5 L13 34 L15.5 34 L16 36.5 L17 34 L19.5 34.5 L17.5 32.5 L18.5 30 L16.5 32 Z" fill="#5dcf20" opacity="0.85"/>
-  <path d="M30 30 L31 33 L29 34.5 L31.5 34.5 L32 37 L33 34.5 L35.5 35 L33.5 33 L34.5 30.5 L32.5 32.5 Z" fill="#5dcf20" opacity="0.7"/>
+// ─── Œuf Yoshi (design épuré) ────────────────────────────────────────────────
+const SVG_OEUF = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+  style="width:100%;height:100%;display:block">
+  <ellipse cx="24" cy="45" rx="11" ry="2" fill="rgba(0,0,0,0.10)"/>
+  <ellipse cx="24" cy="26" rx="15" ry="18" fill="#f5f5f5"/>
+  <!-- Taches étoilées vertes -->
+  <path d="M16 19 L17.5 23 L13.5 25.5 L17.5 25.5 L18.5 30 L20.5 25.5 L24.5 26.5 L21.5 23 L23 18.5 L20 22Z" fill="#66bb6a" opacity="0.9"/>
+  <path d="M28 13 L29 16.5 L26 18 L29.5 18 L30 21.5 L31.5 18 L34.5 18.5 L32 16 L33 13 L31 15Z" fill="#66bb6a" opacity="0.9"/>
+  <path d="M13 31 L14 34 L11.5 35.5 L14.5 35.5 L15 38.5 L16.5 35.5 L19 36 L17 34 L18 31 L16 33Z" fill="#66bb6a" opacity="0.75"/>
+  <path d="M31 31 L32 34 L29.5 35.5 L32.5 35.5 L33 38 L34 35.5 L36.5 36 L35 34 L36 31 L34 33Z" fill="#66bb6a" opacity="0.7"/>
   <!-- Reflet -->
-  <ellipse cx="19" cy="15" rx="4" ry="5" fill="white" opacity="0.35"/>
-  <!-- Contour -->
-  <ellipse cx="24" cy="25" rx="16" ry="19" fill="none" stroke="#c8b870" stroke-width="1.2"/>
+  <ellipse cx="19" cy="16" rx="4" ry="5" fill="white" opacity="0.4"/>
+  <!-- Contour subtil -->
+  <ellipse cx="24" cy="26" rx="15" ry="18" fill="none" stroke="#bdbdbd" stroke-width="1"/>
 </svg>`;
 
-// ─── Nid (objectif) ──────────────────────────────────────────────────────────
-const SVG_NID = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="width:100%;height:100%">
-  <!-- Étoile scintillante -->
-  <polygon points="24,6 27,16 38,16 29,22 32,33 24,27 16,33 19,22 10,16 21,16" fill="#ffd700" stroke="#e6a800" stroke-width="1"/>
-  <polygon points="24,9 26.5,16 36,16 28.5,21 31,30 24,25.5 17,30 19.5,21 12,16 21.5,16" fill="#ffe840"/>
+// ─── Nid / objectif ──────────────────────────────────────────────────────────
+const SVG_NID = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+  style="width:100%;height:100%;display:block">
+  <!-- Étoile (objectif) -->
+  <polygon points="24,5 27.5,15.5 39,15.5 29.5,22 33,33 24,26.5 15,33 18.5,22 9,15.5 20.5,15.5"
+    fill="#ffc107" stroke="#ff8f00" stroke-width="1" stroke-linejoin="round"/>
+  <polygon points="24,8 27,16.5 37,16.5 29,21.5 32,31 24,25.5 16,31 19,21.5 11,16.5 21,16.5"
+    fill="#ffe082"/>
   <!-- Reflet -->
-  <ellipse cx="21" cy="14" rx="3" ry="2" fill="white" opacity="0.4"/>
-  <!-- Nid de branches -->
-  <ellipse cx="24" cy="42" rx="15" ry="5" fill="#8b5e3c"/>
-  <path d="M10 42 Q15 37 20 40 Q24 36 28 40 Q33 37 38 42" stroke="#6b3f1e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  <path d="M11 43 Q18 38 24 41 Q30 38 37 43" stroke="#a0714f" stroke-width="2" fill="none" stroke-linecap="round"/>
-  <!-- Mini oeuf dans le nid -->
-  <ellipse cx="24" cy="40" rx="6" ry="7" fill="#f5f0d8" stroke="#c8b870" stroke-width="0.8"/>
-  <path d="M21 37 L22 39.5 L20 41 L22.5 41 L23 43.5 L24 41 L26 41.5 L24.5 39.5 L25.5 37 L23.5 39 Z" fill="#5dcf20" opacity="0.8" transform="scale(0.7) translate(8,10)"/>
+  <ellipse cx="20.5" cy="14" rx="3" ry="2" fill="white" opacity="0.35"/>
+  <!-- Nid -->
+  <ellipse cx="24" cy="43" rx="13" ry="4.5" fill="#8d6e63"/>
+  <path d="M12 43 Q18 38 24 41 Q30 38 36 43" stroke="#5d4037" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M13 44.5 Q20 40 24 42 Q28 40 35 44.5" stroke="#a1887f" stroke-width="1.5" fill="none" stroke-linecap="round"/>
 </svg>`;
 
-// ─── Mur / Rocher ─────────────────────────────────────────────────────────────
-const SVG_MUR = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="width:100%;height:100%">
-  <!-- Ombre -->
-  <ellipse cx="25" cy="46" rx="14" ry="3" fill="rgba(0,0,0,0.2)"/>
-  <!-- Gros rocher -->
-  <ellipse cx="24" cy="29" rx="18" ry="16" fill="#8a8a8a"/>
-  <ellipse cx="22" cy="27" rx="18" ry="16" fill="#9e9e9e"/>
-  <!-- Texture rocher -->
-  <ellipse cx="16" cy="24" rx="4" ry="3" fill="#888" opacity="0.5"/>
-  <ellipse cx="28" cy="20" rx="3" ry="2.5" fill="#888" opacity="0.4"/>
-  <ellipse cx="22" cy="33" rx="5" ry="3" fill="#888" opacity="0.4"/>
+// ─── Mur / obstacle ───────────────────────────────────────────────────────────
+const SVG_MUR = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+  style="width:100%;height:100%;display:block">
+  <ellipse cx="24" cy="46" rx="13" ry="2" fill="rgba(0,0,0,0.15)"/>
+  <!-- Rocher principal -->
+  <ellipse cx="23" cy="28" rx="17" ry="15" fill="#9e9e9e"/>
+  <ellipse cx="21" cy="26" rx="17" ry="15" fill="#bdbdbd"/>
+  <!-- Texture -->
+  <ellipse cx="15" cy="23" rx="4" ry="3" fill="#9e9e9e" opacity="0.5"/>
+  <ellipse cx="27" cy="19" rx="3" ry="2.5" fill="#9e9e9e" opacity="0.4"/>
+  <ellipse cx="22" cy="32" rx="5" ry="3" fill="#9e9e9e" opacity="0.4"/>
   <!-- Petits rochers -->
-  <ellipse cx="10" cy="38" rx="7" ry="5" fill="#7a7a7a"/>
-  <ellipse cx="36" cy="37" rx="6" ry="5" fill="#7a7a7a"/>
+  <ellipse cx="9" cy="39" rx="7" ry="5" fill="#8a8a8a"/>
+  <ellipse cx="36" cy="38" rx="6" ry="5" fill="#8a8a8a"/>
   <!-- Reflet -->
-  <ellipse cx="16" cy="20" rx="5" ry="4" fill="white" opacity="0.2"/>
-  <!-- Contour -->
-  <ellipse cx="22" cy="27" rx="18" ry="16" fill="none" stroke="#666" stroke-width="1"/>
+  <ellipse cx="15" cy="19" rx="5" ry="4" fill="white" opacity="0.2"/>
+  <ellipse cx="21" cy="26" rx="17" ry="15" fill="none" stroke="#757575" stroke-width="1"/>
 </svg>`;
 
-// ─── Herbe (case vide) ────────────────────────────────────────────────────────
-const SVG_HERBE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="width:100%;height:100%">
+// ─── Case vide (herbe épurée) ─────────────────────────────────────────────────
+const SVG_HERBE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+  style="width:100%;height:100%;display:block">
   <!-- Sol -->
-  <rect x="0" y="30" width="48" height="18" fill="#5a8f2a" rx="0"/>
-  <!-- Petits brins d'herbe -->
-  <path d="M6 30 Q7 24 8 30" stroke="#7ac43a" stroke-width="1.5" fill="none"/>
-  <path d="M14 30 Q15 22 17 30" stroke="#7ac43a" stroke-width="1.5" fill="none"/>
-  <path d="M22 30 Q23 25 24 30" stroke="#8ed44a" stroke-width="1.5" fill="none"/>
-  <path d="M30 30 Q32 23 33 30" stroke="#7ac43a" stroke-width="1.5" fill="none"/>
-  <path d="M38 30 Q39 26 41 30" stroke="#7ac43a" stroke-width="1.5" fill="none"/>
-  <path d="M10 30 Q11 26 12 30" stroke="#8ed44a" stroke-width="1.2" fill="none"/>
-  <path d="M26 30 Q27 24 29 30" stroke="#7ac43a" stroke-width="1.2" fill="none"/>
-  <path d="M36 30 Q37 27 38 30" stroke="#8ed44a" stroke-width="1.2" fill="none"/>
+  <rect x="0" y="32" width="48" height="16" fill="#81c784"/>
+  <!-- Ligne de sol -->
+  <line x1="0" y1="32" x2="48" y2="32" stroke="#66bb6a" stroke-width="1.5"/>
+  <!-- Brins d'herbe -->
+  <path d="M7 32 Q8 26 9 32" stroke="#4caf50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M15 32 Q16 24 18 32" stroke="#4caf50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M23 32 Q24 27 25 32" stroke="#66bb6a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M31 32 Q33 25 34 32" stroke="#4caf50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M39 32 Q40 28 42 32" stroke="#4caf50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M11 32 Q12 28 13 32" stroke="#66bb6a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <path d="M27 32 Q28 26 30 32" stroke="#4caf50" stroke-width="1.2" fill="none" stroke-linecap="round"/>
 </svg>`;
 
 window.SPRITES = { svgYoshi, SVG_OEUF, SVG_NID, SVG_MUR, SVG_HERBE };
@@ -3359,9 +3371,25 @@ function chargerNiveau(niveau) {
   niveauCourant = niveau;
   traceCourante = null;
   if (workspace) workspace.dispose();
-  workspace = Blockly.inject('blockly', { toolbox: toolbox(niveau), trashcan: true });
+  workspace = Blockly.inject('blockly', {
+    toolbox: toolbox(niveau),
+    trashcan: true,
+    theme: Blockly.Themes.Classic,
+  });
   workspace.addChangeListener(rafraichirCode);
+
+  // Objectif
   document.getElementById('message').textContent = niveau.objectif;
+
+  // Info étoiles sous l'objectif (si l'élément existe)
+  const el = document.getElementById('etoiles-info');
+  if (el) {
+    const nb = niveau.oeufs.length;
+    el.textContent = nb > 0
+      ? `👉 Guide le dino pour gober ${nb} œuf${nb > 1 ? 's' : ''} puis atteindre le nid ⭐`
+      : '👉 Guide le dino jusqu\'au nid ⭐';
+  }
+
   window.rendu.dessinerNiveau(niveau, window.rendu.etatInitial(niveau));
   rafraichirCode();
 }
@@ -3375,11 +3403,11 @@ function rafraichirCode() {
 }
 
 const MESSAGES_ECHEC = {
-  mur: 'Oups, le dino a foncé dans un rocher ! 🪨',
-  hors_grille: 'Le dino est sorti de la grotte !',
-  oeufs_restants: 'Il reste des œufs à gober 🥚',
-  pas_au_nid: 'Ramène le dino jusqu\'au nid 🍳',
-  trop_de_pas: 'Le dino tourne en rond… vérifie ta boucle !',
+  mur: '🪨 Le dino a heurté un rocher — modifie la séquence et réessaie.',
+  hors_grille: '⚠️ Le dino est sorti de la grille — vérifie le nombre d\'avances.',
+  oeufs_restants: '🥚 Tous les œufs n\'ont pas été collectés — ajoute des blocs "Gobe".',
+  pas_au_nid: '⭐ Le dino n\'est pas arrivé au nid — il manque des déplacements.',
+  trop_de_pas: '🔁 Boucle trop longue — réduis le nombre de répétitions.',
 };
 
 async function lancer() {

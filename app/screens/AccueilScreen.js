@@ -1,45 +1,53 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 
 export default function AccueilScreen({ navigation }) {
   return (
     <View style={styles.bg}>
-      {/* Ciel */}
-      <View style={styles.ciel}>
-        <Text style={styles.nuage}>☁️</Text>
-        <Text style={[styles.nuage, { top: 30, left: '50%' }]}>☁️</Text>
-        <Text style={[styles.nuage, { top: 10, right: 30, fontSize: 30 }]}>☁️</Text>
+      <StatusBar barStyle="dark-content" backgroundColor="#f0f4f8" />
+
+      {/* Hero */}
+      <View style={styles.hero}>
+        <Text style={styles.logo}>🦖</Text>
+        <Text style={styles.titre}>DinoCode</Text>
+        <Text style={styles.sous}>Apprends à programmer{'\n'}en résolvant des défis</Text>
       </View>
 
-      {/* Zone centrale */}
-      <View style={styles.centre}>
-        {/* Titre */}
-        <View style={styles.carteTitre}>
-          <Text style={styles.titre}>🦖 DINO CODE</Text>
-          <Text style={styles.sous}>Apprends à coder avec Yoshi !</Text>
+      {/* Carte d'infos */}
+      <View style={styles.carte}>
+        <View style={styles.carteRow}>
+          <Text style={styles.carteIcon}>🧩</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.carteTitle}>Blocs visuels</Text>
+            <Text style={styles.carteSub}>Assemble des blocs pour programmer le dino</Text>
+          </View>
         </View>
-
-        {/* Gros bouton JOUER style Nintendo */}
-        <TouchableOpacity
-          style={styles.boutonJouer}
-          onPress={() => navigation.navigate('Carte')}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.boutonTxt}>▶  JOUER</Text>
-        </TouchableOpacity>
-
-        {/* Déco coins dorés */}
-        <View style={styles.coins}>
-          <Text style={styles.coin}>🟡</Text>
-          <Text style={styles.coin}>🟡</Text>
-          <Text style={styles.coin}>🟡</Text>
+        <View style={[styles.carteRow, { borderTopWidth: 1, borderTopColor: '#e8edf2' }]}>
+          <Text style={styles.carteIcon}>🐍</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.carteTitle}>Vrai Python</Text>
+            <Text style={styles.carteSub}>Vois le code Python généré en temps réel</Text>
+          </View>
+        </View>
+        <View style={[styles.carteRow, { borderTopWidth: 1, borderTopColor: '#e8edf2' }]}>
+          <Text style={styles.carteIcon}>⭐</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.carteTitle}>12 niveaux progressifs</Text>
+            <Text style={styles.carteSub}>Du plus simple aux boucles et conditions</Text>
+          </View>
         </View>
       </View>
 
-      {/* Sol herbe */}
-      <View style={styles.sol}>
-        <Text style={styles.solTxt}>🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿🌿</Text>
-      </View>
+      {/* Bouton jouer */}
+      <TouchableOpacity
+        style={styles.bouton}
+        onPress={() => navigation.navigate('Carte')}
+        activeOpacity={0.85}
+      >
+        <Text style={styles.boutonTxt}>▶  Commencer</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.version}>v0.1 — usage familial</Text>
     </View>
   );
 }
@@ -47,93 +55,71 @@ export default function AccueilScreen({ navigation }) {
 const styles = StyleSheet.create({
   bg: {
     flex: 1,
-    backgroundColor: '#87ceeb',
-  },
-  ciel: {
-    flex: 1,
-    position: 'relative',
-  },
-  nuage: {
-    position: 'absolute',
-    top: 20,
-    left: 30,
-    fontSize: 40,
-    opacity: 0.9,
-  },
-  centre: {
-    flex: 2,
-    alignItems: 'center',
+    backgroundColor: '#f0f4f8',
+    paddingHorizontal: 20,
+    paddingTop: 60,
+    paddingBottom: 32,
     justifyContent: 'center',
-    paddingHorizontal: 24,
   },
-  carteTitre: {
-    backgroundColor: 'rgba(255,255,255,0.92)',
-    borderRadius: 20,
-    paddingVertical: 20,
-    paddingHorizontal: 32,
+  hero: {
     alignItems: 'center',
     marginBottom: 32,
-    borderWidth: 3,
-    borderColor: '#5dcf20',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 8,
   },
+  logo: { fontSize: 72, marginBottom: 8 },
   titre: {
     fontSize: 36,
-    fontWeight: '900',
-    color: '#e83020',
-    textShadowColor: '#8b1208',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 0,
-    letterSpacing: 2,
+    fontWeight: '800',
+    color: '#1a2332',
+    letterSpacing: 0.5,
   },
   sous: {
-    fontSize: 15,
-    color: '#2d5a0e',
-    fontWeight: '600',
+    fontSize: 16,
+    color: '#4a5568',
+    textAlign: 'center',
     marginTop: 8,
+    lineHeight: 24,
   },
-  boutonJouer: {
-    backgroundColor: '#e83020',
-    paddingVertical: 18,
-    paddingHorizontal: 60,
+  carte: {
+    backgroundColor: '#ffffff',
     borderRadius: 16,
-    borderWidth: 4,
-    borderColor: '#8b1208',
-    shadowColor: '#8b1208',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 8,
+    overflow: 'hidden',
+    marginBottom: 24,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+  },
+  carteRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    gap: 14,
+  },
+  carteIcon: { fontSize: 26 },
+  carteTitle: { fontSize: 14, fontWeight: '700', color: '#1a2332', marginBottom: 2 },
+  carteSub: { fontSize: 12, color: '#4a5568', lineHeight: 18 },
+  bouton: {
+    backgroundColor: '#1976d2',
+    paddingVertical: 16,
+    borderRadius: 14,
+    alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#1976d2',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
   boutonTxt: {
-    color: '#ffd700',
-    fontSize: 24,
-    fontWeight: '900',
-    letterSpacing: 3,
-    textShadowColor: '#8b1208',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 0,
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
-  coins: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 24,
-  },
-  coin: {
-    fontSize: 28,
-  },
-  sol: {
-    backgroundColor: '#5a9e28',
-    paddingVertical: 8,
-    borderTopWidth: 4,
-    borderTopColor: '#3a7d18',
-  },
-  solTxt: {
-    fontSize: 16,
+  version: {
     textAlign: 'center',
+    color: '#9aa5b4',
+    fontSize: 11,
+    marginTop: 20,
   },
 });

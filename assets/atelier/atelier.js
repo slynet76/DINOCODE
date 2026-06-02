@@ -16,9 +16,25 @@ function chargerNiveau(niveau) {
   niveauCourant = niveau;
   traceCourante = null;
   if (workspace) workspace.dispose();
-  workspace = Blockly.inject('blockly', { toolbox: toolbox(niveau), trashcan: true });
+  workspace = Blockly.inject('blockly', {
+    toolbox: toolbox(niveau),
+    trashcan: true,
+    theme: Blockly.Themes.Classic,
+  });
   workspace.addChangeListener(rafraichirCode);
+
+  // Objectif
   document.getElementById('message').textContent = niveau.objectif;
+
+  // Info étoiles sous l'objectif (si l'élément existe)
+  const el = document.getElementById('etoiles-info');
+  if (el) {
+    const nb = niveau.oeufs.length;
+    el.textContent = nb > 0
+      ? `👉 Guide le dino pour gober ${nb} œuf${nb > 1 ? 's' : ''} puis atteindre le nid ⭐`
+      : '👉 Guide le dino jusqu\'au nid ⭐';
+  }
+
   window.rendu.dessinerNiveau(niveau, window.rendu.etatInitial(niveau));
   rafraichirCode();
 }
@@ -32,11 +48,11 @@ function rafraichirCode() {
 }
 
 const MESSAGES_ECHEC = {
-  mur: 'Oups, le dino a foncé dans un rocher ! 🪨',
-  hors_grille: 'Le dino est sorti de la grotte !',
-  oeufs_restants: 'Il reste des œufs à gober 🥚',
-  pas_au_nid: 'Ramène le dino jusqu\'au nid 🍳',
-  trop_de_pas: 'Le dino tourne en rond… vérifie ta boucle !',
+  mur: '🪨 Le dino a heurté un rocher — modifie la séquence et réessaie.',
+  hors_grille: '⚠️ Le dino est sorti de la grille — vérifie le nombre d\'avances.',
+  oeufs_restants: '🥚 Tous les œufs n\'ont pas été collectés — ajoute des blocs "Gobe".',
+  pas_au_nid: '⭐ Le dino n\'est pas arrivé au nid — il manque des déplacements.',
+  trop_de_pas: '🔁 Boucle trop longue — réduis le nombre de répétitions.',
 };
 
 async function lancer() {

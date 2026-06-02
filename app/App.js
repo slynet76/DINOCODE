@@ -14,16 +14,16 @@ export default function App() {
       <Stack.Navigator
         initialRouteName="Accueil"
         screenOptions={{
-          headerStyle: { backgroundColor: '#e83020' },
-          headerTintColor: '#ffd700',
-          headerTitleStyle: { fontWeight: '900', letterSpacing: 1 },
-          headerShadowVisible: true,
+          headerStyle: { backgroundColor: '#1976d2' },
+          headerTintColor: '#ffffff',
+          headerTitleStyle: { fontWeight: '700', fontSize: 17 },
+          headerShadowVisible: false,
         }}
       >
         <Stack.Screen name="Accueil" component={AccueilScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Carte" component={CarteScreen} options={{ title: '🗺 Carte des niveaux' }} />
-        <Stack.Screen name="Jeu" component={JeuScreen} options={{ title: '🦖 Atelier' }} />
-        <Stack.Screen name="Reglages" component={ReglagesScreen} options={{ title: '⚙ Réglages' }} />
+        <Stack.Screen name="Carte" component={CarteScreen} options={{ title: 'Niveaux' }} />
+        <Stack.Screen name="Jeu" component={JeuScreen} options={{ title: 'Atelier de code' }} />
+        <Stack.Screen name="Reglages" component={ReglagesScreen} options={{ title: 'Réglages' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
