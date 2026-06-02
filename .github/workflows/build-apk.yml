@@ -15,7 +15,10 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
       - run: npm ci --legacy-peer-deps
       - run: npm run prebuild:atelier
-      - run: eas build --platform android --profile preview --non-interactive --wait --output ./app.apk
+      - name: Build APK via EAS (remote)
+        run: eas build --platform android --profile preview --non-interactive --wait
+      - name: Download APK from EAS
+        run: eas build:download --platform android --output ./app.apk --latest
       - uses: softprops/action-gh-release@v2
         with:
           files: ./app.apk
