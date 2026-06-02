@@ -95,4 +95,4 @@ function executerProgramme(niveau, programme) {
   };
 }
 
-module.exports = { executerProgramme };
+window.executerProgramme = executerProgramme;
