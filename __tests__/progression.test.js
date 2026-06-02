@@ -34,3 +34,18 @@ test('reinitialiser efface tout', async () => {
   await reinitialiser();
   expect(await lireProgression()).toEqual({});
 });
+
+test('met à jour blocs si même étoiles mais solution plus courte', async () => {
+  await enregistrerResultat(1, 2, 8); // 8 blocs, 2 étoiles
+  await enregistrerResultat(1, 2, 3); // 3 blocs, 2 étoiles — mieux
+  const p = await lireProgression();
+  expect(p['1'].blocs).toBe(3);
+  expect(p['1'].etoiles).toBe(2);
+});
+
+test('ne met pas à jour si même étoiles mais plus de blocs', async () => {
+  await enregistrerResultat(1, 2, 3);
+  await enregistrerResultat(1, 2, 8);
+  const p = await lireProgression();
+  expect(p['1'].blocs).toBe(3); // conserve le meilleur
+});

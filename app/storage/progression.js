@@ -10,7 +10,8 @@ async function lireProgression() {
 async function enregistrerResultat(niveauId, etoiles, blocs) {
   const p = await lireProgression();
   const courant = p[String(niveauId)];
-  if (!courant || etoiles > courant.etoiles) {
+  // Met à jour si : première fois, ou plus d'étoiles, ou même étoiles avec moins de blocs
+  if (!courant || etoiles > courant.etoiles || (etoiles === courant.etoiles && blocs < courant.blocs)) {
     p[String(niveauId)] = { etoiles, blocs };
   }
   await AsyncStorage.setItem(CLE, JSON.stringify(p));

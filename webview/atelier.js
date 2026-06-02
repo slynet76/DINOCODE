@@ -26,6 +26,9 @@ function chargerNiveau(niveau) {
 function rafraichirCode() {
   const py = Blockly.Python.workspaceToCode(workspace) || '# pose des blocs ici';
   document.getElementById('code').textContent = py;
+  // Invalide le mode pas-à-pas : si l'utilisateur modifie des blocs entre deux clics,
+  // la prochaine pression sur ▶ Pas repart du nouveau programme, pas de l'ancienne trace.
+  traceCourante = null;
 }
 
 const MESSAGES_ECHEC = {
