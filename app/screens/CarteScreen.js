@@ -7,6 +7,14 @@ import { lireProgression } from '../storage/progression';
 export default function CarteScreen({ navigation }) {
   const [prog, setProg] = useState({});
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Text onPress={() => navigation.navigate('Reglages')} style={{ color: '#fff', fontSize: 22, marginRight: 8 }}>⚙</Text>
+      ),
+    });
+  }, [navigation]);
+
   useFocusEffect(useCallback(() => {
     lireProgression().then(setProg);
   }, []));
