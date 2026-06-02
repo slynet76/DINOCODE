@@ -1,5 +1,5 @@
-// Dessine la grille, le dino, les œufs et le nid dans un conteneur DOM.
-const EMOJIS = { dino: '🦖', oeuf: '🥚', nid: '🍳', mur: '🪨' };
+// Dessine la grille Yoshi avec des sprites SVG inline.
+// Les sprites sont définis dans sprites.js (chargé avant ce fichier).
 
 function dessinerNiveau(niveau, etat) {
   const { largeur, hauteur } = niveau.grille;
@@ -10,10 +10,30 @@ function dessinerNiveau(niveau, etat) {
     for (let x = 0; x < largeur; x++) {
       const c = document.createElement('div');
       c.className = 'case';
-      if (niveau.murs.some((m) => m.x === x && m.y === y)) c.textContent = EMOJIS.mur;
-      else if (niveau.nid.x === x && niveau.nid.y === y) c.textContent = EMOJIS.nid;
-      else if (etat.oeufs.some((o) => !o.gobe && o.x === x && o.y === y)) c.textContent = EMOJIS.oeuf;
-      if (etat.dino.x === x && etat.dino.y === y) c.textContent = EMOJIS.dino;
+
+      if (niveau.murs.some((m) => m.x === x && m.y === y)) {
+        c.classList.add('case-mur');
+        c.innerHTML = window.SPRITES.SVG_MUR;
+      } else if (niveau.nid.x === x && niveau.nid.y === y) {
+        c.classList.add('case-nid');
+        c.innerHTML = window.SPRITES.SVG_NID;
+      } else {
+        c.innerHTML = window.SPRITES.SVG_HERBE;
+      }
+
+      // Œuf par-dessus l'herbe (pas sur mur ni nid)
+      const aOeuf = etat.oeufs.some((o) => !o.gobe && o.x === x && o.y === y);
+      if (aOeuf) {
+        c.classList.add('case-oeuf');
+        c.innerHTML = window.SPRITES.SVG_OEUF;
+      }
+
+      // Yoshi en dernier (toujours visible par-dessus)
+      if (etat.dino.x === x && etat.dino.y === y) {
+        c.classList.add('case-yoshi');
+        c.innerHTML = window.SPRITES.svgYoshi(etat.dino.direction);
+      }
+
       grille.appendChild(c);
     }
   }

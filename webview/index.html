@@ -4,28 +4,246 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <style>
-    body { margin: 0; font-family: sans-serif; background: #dcfce7; }
-    #grille { display: grid; gap: 3px; padding: 8px; }
-    .case { aspect-ratio: 1; background: #86efac; border-radius: 6px;
-            display: flex; align-items: center; justify-content: center; font-size: 24px; }
-    #blockly { height: 40vh; }
-    #code { background: #0f172a; color: #4ade80; font-family: monospace;
-            font-size: 12px; padding: 8px; white-space: pre; min-height: 60px; }
-    #code .actif { background: #334155; display: block; }
-    #go { width: 100%; padding: 14px; font-size: 18px; font-weight: bold;
-          color: #fff; background: #16a34a; border: none; }
-    #message { padding: 8px; text-align: center; font-weight: bold; min-height: 22px; }
+    /* ── Reset & base ─────────────────────────────────────────── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(180deg, #87ceeb 0%, #b0e0ff 35%, #7bc43a 35%, #5a9e28 100%);
+      min-height: 100vh;
+    }
+
+    /* ── Header Yoshi ──────────────────────────────────────────── */
+    #header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #e83020 0%, #c01a0e 100%);
+      padding: 8px 12px;
+      border-bottom: 3px solid #8b1208;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+    }
+    #header-titre {
+      font-size: 20px;
+      font-weight: 900;
+      color: #ffd700;
+      text-shadow: 2px 2px 0 #8b1208, -1px -1px 0 #8b1208;
+      letter-spacing: 1px;
+    }
+    #header-etoiles {
+      font-size: 18px;
+      color: #ffd700;
+    }
+
+    /* ── Message objectif ──────────────────────────────────────── */
+    #message {
+      background: rgba(255,255,255,0.92);
+      border: 2px solid #5dcf20;
+      border-radius: 10px;
+      margin: 6px 8px 4px;
+      padding: 6px 10px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 13px;
+      color: #2d5a0e;
+      min-height: 28px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    /* ── Grille de jeu ─────────────────────────────────────────── */
+    #grille-wrapper {
+      background: linear-gradient(180deg, #87ceeb 0%, #a8d8ea 60%, #7bc43a 60%);
+      border: 3px solid #3a7d18;
+      border-radius: 12px;
+      margin: 4px 8px;
+      padding: 6px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.2), 0 3px 10px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    #grille {
+      display: grid;
+      gap: 3px;
+    }
+    .case {
+      aspect-ratio: 1;
+      background: linear-gradient(180deg, #87d83e 0%, #5cb82a 60%, #3d8a18 100%);
+      border-radius: 6px;
+      border: 1.5px solid #3a7d18;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 1px 3px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .case svg { width: 90%; height: 90%; }
+    .case-mur {
+      background: linear-gradient(180deg, #aaa 0%, #777 100%);
+      border-color: #555;
+    }
+    .case-nid {
+      background: linear-gradient(180deg, #ffe87a 0%, #f5d020 50%, #5cb82a 50%, #3d8a18 100%);
+      border-color: #c8a800;
+      box-shadow: 0 0 8px rgba(255,215,0,0.6), inset 0 1px 3px rgba(255,255,255,0.4);
+    }
+    .case-oeuf {
+      background: linear-gradient(180deg, #eef8d0 0%, #d4eeaa 50%, #5cb82a 50%, #3d8a18 100%);
+    }
+    .case-yoshi {
+      background: linear-gradient(180deg, #a0e060 0%, #70c030 50%, #3d8a18 50%, #2d6a10 100%);
+      box-shadow: 0 0 10px rgba(93,207,32,0.5), inset 0 1px 3px rgba(255,255,255,0.4);
+      animation: yoshi-bounce 0.3s ease;
+    }
+    @keyframes yoshi-bounce {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    /* ── Zone Blockly ──────────────────────────────────────────── */
+    #blockly-wrapper {
+      background: white;
+      border: 3px solid #5dcf20;
+      border-radius: 10px;
+      margin: 4px 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    #blockly-label {
+      background: linear-gradient(90deg, #5dcf20, #3aaa1a);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    #blockly { height: 38vh; }
+
+    /* ── Panneau Python ────────────────────────────────────────── */
+    #code-wrapper {
+      background: #0d1117;
+      border: 2px solid #5dcf20;
+      border-radius: 8px;
+      margin: 4px 8px;
+      overflow: hidden;
+    }
+    #code-label {
+      background: #161b22;
+      color: #5dcf20;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #code-label::before { content: '🐍'; }
+    #code {
+      background: #0d1117;
+      color: #4ade80;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      padding: 6px 10px;
+      white-space: pre;
+      min-height: 44px;
+      max-height: 80px;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
+    #code .actif {
+      background: #1e3a2e;
+      color: #86efac;
+      display: block;
+      border-left: 3px solid #5dcf20;
+      padding-left: 4px;
+      margin-left: -4px;
+    }
+
+    /* ── Boutons d'action ──────────────────────────────────────── */
+    #boutons-action {
+      padding: 6px 8px 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    #go {
+      width: 100%;
+      padding: 13px;
+      font-size: 17px;
+      font-weight: 900;
+      color: white;
+      background: linear-gradient(135deg, #e83020 0%, #c01a0e 100%);
+      border: 3px solid #8b1208;
+      border-radius: 12px;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 0 #8b1208;
+      box-shadow: 0 4px 0 #8b1208, 0 6px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    #go:active { transform: translateY(3px); box-shadow: 0 1px 0 #8b1208; }
+    #boutons-debug { display: flex; gap: 6px; }
+    #lent, #pas {
+      flex: 1;
+      padding: 9px 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.1s;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.3);
+    }
+    #lent {
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      border-color: #0369a1;
+      box-shadow: 0 3px 0 #0369a1;
+    }
+    #pas {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      border-color: #5b21b6;
+      box-shadow: 0 3px 0 #5b21b6;
+    }
+    #lent:active, #pas:active { transform: translateY(2px); box-shadow: none; }
   </style>
 </head>
 <body>
-  <div id="grille"></div>
-  <div id="message"></div>
-  <div id="blockly"></div>
-  <pre id="code"></pre>
-  <button id="go">▶ GO DINO !</button>
-  <div style="display:flex; gap:6px; padding:6px;">
-    <button id="lent" style="flex:1; padding:10px; background:#0ea5e9; color:#fff; border:none;">🐢 Lent</button>
-    <button id="pas" style="flex:1; padding:10px; background:#8b5cf6; color:#fff; border:none;">▶ Pas suivant</button>
+
+  <!-- Header -->
+  <div id="header">
+    <span id="header-titre">🦖 DINO CODE</span>
+    <span id="header-etoiles">⭐⭐⭐</span>
+  </div>
+
+  <!-- Objectif -->
+  <div id="message">Charge un niveau...</div>
+
+  <!-- Grille de jeu -->
+  <div id="grille-wrapper">
+    <div id="grille"></div>
+  </div>
+
+  <!-- Zone blocs Blockly -->
+  <div id="blockly-wrapper">
+    <div id="blockly-label">Programme de Yoshi</div>
+    <div id="blockly"></div>
+  </div>
+
+  <!-- Code Python -->
+  <div id="code-wrapper">
+    <div id="code-label">Code Python généré</div>
+    <pre id="code"># pose des blocs ici</pre>
+  </div>
+
+  <!-- Boutons -->
+  <div id="boutons-action">
+    <button id="go">▶ GO YOSHI !</button>
+    <div id="boutons-debug">
+      <button id="lent">🐢 Lent</button>
+      <button id="pas">▶ Pas suivant</button>
+    </div>
   </div>
 
   <script src="build/blockly_compressed.js"></script>
@@ -33,6 +251,7 @@
   <script src="build/python_compressed.js"></script>
   <script src="build/fr.js"></script>
   <script src="moteur-web.js"></script>
+  <script src="sprites.js"></script>
   <script src="rendu.js"></script>
   <script src="pont.js"></script>
   <script src="blocs.js"></script>
